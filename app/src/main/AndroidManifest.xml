@@ -27,6 +27,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.example.lbomma.countries.app"
+            android:name=".data.CountryContentProvider" />
     </application>
 
 </manifest>
