@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 /**
@@ -20,42 +19,42 @@ public class CountryContentProvider extends ContentProvider{
     static final int COUNTRY = 100;
     static final int COUNTRY_WITH_NAME = 101;
 
-
-    private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
-
-    static{
-        sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
-
-        //This is an inner join which looks like
-        //weather INNER JOIN location ON weather.location_id = location._id
-        sWeatherByLocationSettingQueryBuilder.setTables(
-                CountryContract.CountryEntry.TABLE_NAME + " INNER JOIN " +
-                        CountryContract.CountryEntry.TABLE_NAME +
-                        " ON " + CountryContract.CountryEntry.TABLE_NAME +
-                        " = " + CountryContract.CountryEntry.TABLE_NAME +
-                        "." + CountryContract.CountryEntry._ID);
-    }
-
     //location.location_setting = ?
-    private static final String sLocationSettingAndDaySelection =
+    private static final String sCountryNameSelection =
             CountryContract.CountryEntry.TABLE_NAME+
                     "." + CountryContract.CountryEntry.COLUMN_NAME + " = ? ";
 
 
 
-    private Cursor getCountryBySelectedName(
-            Uri uri, String[] projection, String sortOrder) {
-        String countryValues = CountryContract.CountryEntry.getCountryDetailsFromUri(uri);
+    private Cursor getCountryBySelectedName(Uri uri, String[] projection, String sortOrder) {
+       // String countryValues = CountryContract.CountryEntry.getCountryDetailsFromUri(uri);
         String name = CountryContract.CountryEntry.getNameFromUri(uri);
 
-        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        String[] selectionArgs;
+        String selection;
+
+            selection = sCountryNameSelection;
+            selectionArgs = new String[]{name};
+
+
+        return mOpenHelper.getReadableDatabase().query(
+                CountryContract.CountryEntry.TABLE_NAME,
                 projection,
-                sLocationSettingAndDaySelection,
-                new String[]{countryValues, name},
+                sCountryNameSelection,
+                selectionArgs,
                 null,
                 null,
-                sortOrder
-        );
+                sortOrder);
+
+//
+//        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                sLocationSettingAndDaySelection,
+//                new String[]{countryValues, name},
+//                null,
+//                null,
+//                sortOrder
+//        );
     }
 
     /*
@@ -76,7 +75,7 @@ public class CountryContentProvider extends ContentProvider{
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, CountryContract.PATH_COUNTRY, COUNTRY);
-       // matcher.addURI(authority, CountryContract.PATH_COUNTRY + "/*", WEATHER_WITH_LOCATION);
+        matcher.addURI(authority, CountryContract.PATH_COUNTRY + "/*", COUNTRY_WITH_NAME);
 
         return matcher;
     }

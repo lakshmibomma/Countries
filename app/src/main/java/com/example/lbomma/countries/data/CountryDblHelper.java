@@ -35,8 +35,12 @@ public class CountryDblHelper extends SQLiteOpenHelper {
                 CountryEntry.COLUMN_CAPITAL + " text not null, " +
                 CountryEntry.COLUMN_CURRENCY + " text not null," +
                 CountryEntry.COLUMN_NATIONALITY + " text not null, " +
-                CountryEntry.COLUMN_POPULATION + " text not null); ";
-        database.execSQL(SQL_CREATE_COUNTRIES_TABLE);
+                CountryEntry.COLUMN_POPULATION + " text not null, " +
+                CountryEntry.COLUMN_LATITUDE + " double, " +
+                CountryEntry.COLUMN_LANGITUDE + " double);  ";
+
+
+                database.execSQL(SQL_CREATE_COUNTRIES_TABLE);
 
     }
 

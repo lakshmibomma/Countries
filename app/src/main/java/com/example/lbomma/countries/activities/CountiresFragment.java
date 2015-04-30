@@ -1,10 +1,12 @@
 package com.example.lbomma.countries.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.support.v4.content.CursorLoader;
-
 
 import com.example.lbomma.countries.R;
 import com.example.lbomma.countries.data.CountryContract;
@@ -44,7 +44,9 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
             CountryContract.CountryEntry.COLUMN_CAPITAL,
             CountryContract.CountryEntry.COLUMN_CURRENCY,
             CountryContract.CountryEntry.COLUMN_NATIONALITY,
-            CountryContract.CountryEntry.COLUMN_POPULATION
+            CountryContract.CountryEntry.COLUMN_POPULATION,
+            CountryContract.CountryEntry.COLUMN_LATITUDE,
+            CountryContract.CountryEntry.COLUMN_LANGITUDE
     };
 
     // These indices are tied to COUNTRIES_COLUMNS.  If COUNTRIES_COLUMNS changes, these
@@ -56,6 +58,9 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
     static final int COL_COUNTRY_CURRENCY = 4;
     static final int COL_COUNTRY_NATIONALITY = 5;
     static final int COL_COUNTRY_POPULATION = 6;
+    static final int COL_COUNTRY_LATITUDE = 7;
+    static final int COL_COUNTRY_LANGITUDE = 8;
+
 
 
 
@@ -106,18 +111,19 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    System.out.println( "country name is " + cursor.getString(COL_COUNTRY_NAME)) ;
+                    System.out.println( "country latitude is " + cursor.getDouble(COL_COUNTRY_LATITUDE)) ;
 
-
-//                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-//                if (cursor != null) {
-//                   // String locationSetting = Utility.getPreferredLocation(getActivity());
-//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-//                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-//                            ));
-//                    startActivity(intent);
-//                }
-                //To do how to pass object through extras
+                    // String locationSetting = Utility.getPreferredLocation(getActivity());
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(CountryContract.CountryEntry.buildSelectedCountry(
+                                    cursor.getString(COL_COUNTRY_NAME)
+                            ));
+                    startActivity(intent);
+                }
+//                To do how to pass object through extras
 //                String countryDetails = mCountriestAdapter.getItem(position);
 //                Intent intent = new Intent(getActivity(), DetailActivity.class)
 //                .putExtra(Intent.EXTRA_TEXT, countryDetails);
@@ -152,10 +158,10 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
 
         // Sort order:  Ascending, by date.
         String sortOrder = CountryContract.CountryEntry.COLUMN_NAME;
-        Uri weatherForLocationUri = CountryContract.CountryEntry.buildCountriesList();
+        Uri countryUri = CountryContract.CountryEntry.buildCountriesList();
 
         return new CursorLoader(getActivity(),
-                weatherForLocationUri,
+                countryUri,
                 COUNTRY_COLUMNS,
                 null,
                 null,

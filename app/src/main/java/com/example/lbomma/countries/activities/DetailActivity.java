@@ -1,10 +1,15 @@
 package com.example.lbomma.countries.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.lbomma.countries.R;
+import com.example.lbomma.countries.data.CountryContract;
 
 
 public class DetailActivity extends ActionBarActivity {
@@ -55,8 +61,39 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class DetailFragment extends Fragment {
+    public static class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
         private String countryDetails;
+
+        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+
+        private String mForecast;
+
+        private static final int DETAIL_LOADER = 0;
+
+        private static final String[] COUNTRY_COLUMNS = {
+                CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
+                CountryContract.CountryEntry.COLUMN_NAME,
+                CountryContract.CountryEntry.COLUMN_REGION,
+                CountryContract.CountryEntry.COLUMN_CAPITAL,
+                CountryContract.CountryEntry.COLUMN_CURRENCY,
+                CountryContract.CountryEntry.COLUMN_POPULATION,
+                CountryContract.CountryEntry.COLUMN_NATIONALITY,
+                CountryContract.CountryEntry.COLUMN_LATITUDE,
+                CountryContract.CountryEntry.COLUMN_LANGITUDE,
+        };
+
+        // these constants correspond to the projection defined above, and must change if the
+        // projection changes
+        static final int COL_COUNTRY_ID = 0;
+        static final int COL_COUNTRY_NAME = 1;
+        static final int COL_COUNTRY_REGION = 2;
+        static final int COL_COUNTRY_CAPITAL = 3;
+        static final int COL_COUNTRY_CURRENCY = 4;
+        static final int COL_COUNTRY_NATIONALITY = 5;
+        static final int COL_COUNTRY_POPULATION = 6;
+        static final int COL_COUNTRY_LATITUDE = 7;
+        static final int COL_COUNTRY_LANGITUDE = 8;
+
 
         public DetailFragment() {
         }
@@ -92,5 +129,73 @@ public class DetailActivity extends ActionBarActivity {
 
             return rootView;
         }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Log.v(LOG_TAG, "In onCreateLoader");
+            Intent intent = getActivity().getIntent();
+            if (intent == null) {
+                return null;
+            }
+
+            // Now create and return a CursorLoader that will take care of
+            // creating a Cursor for the data being displayed.
+            return new CursorLoader(
+                    getActivity(),
+                    intent.getData(),
+                    COUNTRY_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.v(LOG_TAG, "In onLoadFinished");
+
+            if (data.moveToFirst()) {
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_REGION)) ;
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_NAME)) ;
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LANGITUDE)) ;
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LATITUDE)) ;
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LANGITUDE)) ;
+                TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
+                detailTextView.setText(data.getString(COL_COUNTRY_NAME));
+            }
+
+//            String dateString = Utility.formatDate(
+//                    data.getLong(COL_WEATHER_DATE));
+//
+//            String weatherDescription =
+//                    data.getString(COL_WEATHER_DESC);
+//
+//            boolean isMetric = Utility.isMetric(getActivity());
+//
+//            String high = Utility.formatTemperature(
+//                    data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+//
+//            String low = Utility.formatTemperature(
+//                    data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+//
+//            mForecast = String.format("%s - %s - %s/%s", dateString, weatherDescription, high, low);
+//
+//            TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
+//            detailTextView.setText(mForecast);
+
+//            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
+//            if (mShareActionProvider != null) {
+//                mShareActionProvider.setShareIntent(createShareForecastIntent());
+//            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) { }
     }
 }

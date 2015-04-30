@@ -48,8 +48,8 @@ public class CountryContract {
 
         // Humidity is stored as a float representing percentage
         public static final String COLUMN_POPULATION = "population";
-//        public static final String COLUMN_LATITUDE = "latitude";
-//        public static final String COLUMN_LANGITUDE = "langitude";
+        public static final String COLUMN_LATITUDE = "latitude";
+        public static final String COLUMN_LANGITUDE = "langitude";
 
 
         public static Uri buildCountryUri(long id) {
@@ -59,17 +59,17 @@ public class CountryContract {
         /*
             Student: This is the buildWeatherLocation function you filled in.
          */
-        public static Uri buildWeatherLocation(String locationSetting) {
-            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
-        }
 
+        public static Uri buildSelectedCountry(String countryname) {
+            return CONTENT_URI.buildUpon().appendPath(countryname).build();
+        }
 
         public static Uri buildCountriesList() {
             return CONTENT_URI.buildUpon().build();
         }
 
         public static String getNameFromUri(Uri uri) {
-            return (uri.getPathSegments().get(1));
+            return uri.getPathSegments().get(1);
         }
 
         public static String getCountryDetailsFromUri(Uri uri) {

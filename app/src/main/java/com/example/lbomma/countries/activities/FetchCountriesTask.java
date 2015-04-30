@@ -49,6 +49,9 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
         final String COUNTRY_CURRENCY = "currency";
         final String COUNTRY_NATIONALITY = "nationality";
         final String COUNTRY_POPULATION = "population";
+        final String COUNTRY_LATITUDE = "latitude";
+        final String COUNTRY_LANGITUDE = "langitude";
+
 
         // These are the names of the JSON objects that need to be extracted.
 
@@ -72,12 +75,44 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
                 countryValues.put(CountryEntry.COLUMN_NATIONALITY, jb.getString(COUNTRY_NATIONALITY));
                 countryValues.put(CountryEntry.COLUMN_POPULATION, jb.getString(COUNTRY_POPULATION));
 
+            // To do check null condition for lat,lang
+                JSONArray latLong = jb.getJSONArray("latlng");
+
+                if(latLong.length() >= 1) {
+                    Double latitude = null;
+                    try {
+                        latitude = latLong.getDouble(0);
+                    }
+                    catch (JSONException ignored) {}
+
+                    if (latitude == null) {
+                        // Stomp your feet
+                    }
+                    else {
+                        countryValues.put(CountryEntry.COLUMN_LATITUDE,latitude);
+
+                        System.out.println( "latitude are" + latitude) ;
+                    }
+                }
+                if(latLong.length() >= 2) {
+
+                    Double langitude = null;
+                    try {
+                        langitude = latLong.getDouble(1);
+                    }
+                    catch (JSONException ignored) {}
+
+                    if (langitude == null) {
+                        // Stomp your feet
+                    }
+                    else {
+                        countryValues.put(CountryEntry.COLUMN_LANGITUDE,langitude);
+
+                        System.out.println( "langitude are" + langitude) ;
+                    }
+                }
                 cVVector.add(countryValues);
 
-
-
-            // To do check null condition for lat,lang
-//                JSONArray latLong = jb.getJSONArray("latlng");
 //                for(int j=0;j<latLong.length();j++)
 //                {
 //                    Double latLangJsonObj = (Double)latLong.getDouble(j);
