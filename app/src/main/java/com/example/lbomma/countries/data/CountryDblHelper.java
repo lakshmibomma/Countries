@@ -37,7 +37,7 @@ public class CountryDblHelper extends SQLiteOpenHelper {
                 CountryEntry.COLUMN_NATIONALITY + " text not null, " +
                 CountryEntry.COLUMN_POPULATION + " text not null, " +
                 CountryEntry.COLUMN_LATITUDE + " double, " +
-                CountryEntry.COLUMN_LANGITUDE + " double);  ";
+                CountryEntry.COLUMN_LONGITUDE + " double);  ";
 
 
                 database.execSQL(SQL_CREATE_COUNTRIES_TABLE);

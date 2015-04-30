@@ -49,7 +49,7 @@ public class CountryContract {
         // Humidity is stored as a float representing percentage
         public static final String COLUMN_POPULATION = "population";
         public static final String COLUMN_LATITUDE = "latitude";
-        public static final String COLUMN_LANGITUDE = "langitude";
+        public static final String COLUMN_LONGITUDE = "longitude";
 
 
         public static Uri buildCountryUri(long id) {

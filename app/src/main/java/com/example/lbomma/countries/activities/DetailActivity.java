@@ -24,13 +24,15 @@ import com.example.lbomma.countries.data.CountryContract;
 import java.util.Locale;
 
 
-public class DetailActivity extends ActionBarActivity {
-
+public class DetailActivity extends ActionBarActivity
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new DetailFragment())
                     .commit();
@@ -39,21 +41,24 @@ public class DetailActivity extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             return true;
         }
 
@@ -63,16 +68,12 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-        private String countryDetails;
-
+    public static class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
+    {
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-
-        private String mForecast;
-
         private static final int DETAIL_LOADER = 0;
-
-        private static final String[] COUNTRY_COLUMNS = {
+        private static final String[] COUNTRY_COLUMNS =
+                {
                 CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
                 CountryContract.CountryEntry.COLUMN_NAME,
                 CountryContract.CountryEntry.COLUMN_REGION,
@@ -81,11 +82,11 @@ public class DetailActivity extends ActionBarActivity {
                 CountryContract.CountryEntry.COLUMN_POPULATION,
                 CountryContract.CountryEntry.COLUMN_NATIONALITY,
                 CountryContract.CountryEntry.COLUMN_LATITUDE,
-                CountryContract.CountryEntry.COLUMN_LANGITUDE,
-        };
+                CountryContract.CountryEntry.COLUMN_LONGITUDE,
+                };
 
-        // these constants correspond to the projection defined above, and must change if the
-        // projection changes
+        // these constants values correspond to the projection defined above with respect to country columns,
+        // and must change if the columns order changes
         static final int COL_COUNTRY_ID = 0;
         static final int COL_COUNTRY_NAME = 1;
         static final int COL_COUNTRY_REGION = 2;
@@ -94,16 +95,16 @@ public class DetailActivity extends ActionBarActivity {
         static final int COL_COUNTRY_NATIONALITY = 5;
         static final int COL_COUNTRY_POPULATION = 6;
         static final int COL_COUNTRY_LATITUDE = 7;
-        static final int COL_COUNTRY_LANGITUDE = 8;
+        static final int COL_COUNTRY_LONGITUDE = 8;
 
-
-        public DetailFragment() {
+        public DetailFragment()
+        {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
+                                 Bundle savedInstanceState)
+        {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
             // The detail Activity called via intent.  Inspect the intent for country data.
@@ -136,13 +137,15 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
+        public void onActivityCreated(Bundle savedInstanceState)
+        {
             getLoaderManager().initLoader(DETAIL_LOADER, null, this);
             super.onActivityCreated(savedInstanceState);
         }
 
         @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        public Loader<Cursor> onCreateLoader(int id, Bundle args)
+        {
             Log.v(LOG_TAG, "In onCreateLoader");
             Intent intent = getActivity().getIntent();
             if (intent == null) {
@@ -162,19 +165,20 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+        {
             Log.v(LOG_TAG, "In onLoadFinished");
 
-            if (data.moveToFirst()) {
+            if (data.moveToFirst())
+            {
                 System.out.println( "country details are  " + data.getString(COL_COUNTRY_REGION)) ;
                 System.out.println( "country details are  " + data.getString(COL_COUNTRY_NAME)) ;
-                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LANGITUDE)) ;
                 System.out.println( "country details are  " + data.getString(COL_COUNTRY_LATITUDE)) ;
-                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LANGITUDE)) ;
+                System.out.println( "country details are  " + data.getString(COL_COUNTRY_LONGITUDE)) ;
                 TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
                 detailTextView.setText(data.getString(COL_COUNTRY_NAME));
                 getActivity().getIntent().putExtra("latitude",data.getString(COL_COUNTRY_LATITUDE));
-                getActivity().getIntent().putExtra("longitude",data.getString(COL_COUNTRY_LANGITUDE));
+                getActivity().getIntent().putExtra("longitude",data.getString(COL_COUNTRY_LONGITUDE));
             }
 
 //            String dateString = Utility.formatDate(
@@ -203,6 +207,8 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) { }
+        public void onLoaderReset(Loader<Cursor> loader)
+        {
+        }
     }
 }

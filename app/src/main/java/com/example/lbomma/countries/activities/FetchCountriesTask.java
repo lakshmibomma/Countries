@@ -23,11 +23,13 @@ import java.util.Vector;
 /**
  * Created by LBomma on 4/25/15.
  */
-public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
+public class FetchCountriesTask extends AsyncTask<String, Void, Void>
+{
 
     private final String LOG_TAG = FetchCountriesTask.class.getSimpleName();
     private final Context mContext;
-    public FetchCountriesTask(Context context) {
+    public FetchCountriesTask(Context context)
+    {
         mContext = context;
     }
 
@@ -56,15 +58,14 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
         // These are the names of the JSON objects that need to be extracted.
 
         JSONArray jsonArray = new JSONArray(countriesJsonStr);
-        Integer count = jsonArray.length();
-        //String[] resultStrs = new String[count];
 
         // Insert the  country information into the database
         Vector<ContentValues> cVVector = new Vector<ContentValues>(jsonArray.length());
-        try {
+        try
+        {
             for(int i=0;i<jsonArray.length();i++)
             {
-                JSONObject jb = (JSONObject)jsonArray.getJSONObject(i);
+                JSONObject jb = jsonArray.getJSONObject(i);
 
                 ContentValues countryValues = new ContentValues();
 
@@ -75,74 +76,71 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
                 countryValues.put(CountryEntry.COLUMN_NATIONALITY, jb.getString(COUNTRY_NATIONALITY));
                 countryValues.put(CountryEntry.COLUMN_POPULATION, jb.getString(COUNTRY_POPULATION));
 
-            // To do check null condition for lat,lang
+                // To do check null condition for lat,lang
                 JSONArray latLong = jb.getJSONArray("latlng");
 
-                if(latLong.length() >= 1) {
+                if(latLong.length() >= 1)
+                {
                     Double latitude = null;
-                    try {
+                    try
+                    {
                         latitude = latLong.getDouble(0);
                     }
                     catch (JSONException ignored) {}
 
-                    if (latitude == null) {
+                    if (latitude == null)
+                    {
                         // Stomp your feet
                     }
-                    else {
+                    else
+                    {
                         countryValues.put(CountryEntry.COLUMN_LATITUDE,latitude);
 
                         System.out.println( "latitude are" + latitude) ;
                     }
                 }
-                if(latLong.length() >= 2) {
-
-                    Double langitude = null;
-                    try {
-                        langitude = latLong.getDouble(1);
+                if(latLong.length() >= 2)
+                {
+                    Double longitude = null;
+                    try
+                    {
+                        longitude = latLong.getDouble(1);
                     }
                     catch (JSONException ignored) {}
 
-                    if (langitude == null) {
+                    if (longitude == null)
+                    {
                         // Stomp your feet
                     }
-                    else {
-                        countryValues.put(CountryEntry.COLUMN_LANGITUDE,langitude);
+                    else
+                    {
+                        countryValues.put(CountryEntry.COLUMN_LONGITUDE,longitude);
 
-                        System.out.println( "langitude are" + langitude) ;
+                        System.out.println( "longitude are" + longitude) ;
                     }
                 }
                 cVVector.add(countryValues);
 
-//                for(int j=0;j<latLong.length();j++)
-//                {
-//                    Double latLangJsonObj = (Double)latLong.getDouble(j);
-//                    System.out.println( "latLangJsonObj are" + latLangJsonObj) ;
-//
-//                }
-
-//                country.setLangitude((JSONObject)latLong.get(""));
-//
-//                 String message = "Country : " + jb.getString("name") + " , " +
-//                    "Region : " + jb.getString("region");
-//                 resultStrs[i] =  message;
-//                 //System.out.println( "country details are" + message) ;
             }
             int inserted = 0;
             // add to database
-            if ( cVVector.size() > 0 ) {
+            if ( cVVector.size() > 0 )
+            {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
                 inserted = mContext.getContentResolver().bulkInsert(CountryEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "FetchCountryTask Complete. " + inserted + " Inserted countries info");
 
-        } catch (JSONException e) {
+        } catch (JSONException e)
+        {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(String... params)
+    {
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -152,7 +150,8 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
         // Will contain the raw JSON response as a string.
         String countriesJsonStr = null;
 
-        try {
+        try
+        {
             // Construct the URL for the Mshapes countries query
             // https://restcountries.p.mashape.com/all
             // Pass the api key through request
@@ -189,32 +188,42 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void> {
                 buffer.append(line + "\n");
             }
 
-            if (buffer.length() == 0) {
+            if (buffer.length() == 0)
+            {
                 // Stream was empty.  No point in parsing.
                 return null;
             }
             countriesJsonStr = buffer.toString();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             Log.e(LOG_TAG, "Error ", e);
             // If the api is not returning any data, there's no point in parse it.
             return null;
-        } finally {
-            if (urlConnection != null) {
+        } finally
+        {
+            if (urlConnection != null)
+            {
                 urlConnection.disconnect();
             }
-            if (reader != null) {
-                try {
+            if (reader != null)
+            {
+                try
+                {
                     reader.close();
-                } catch (final IOException e) {
+                } catch (final IOException e)
+                {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
         }
 
-        try {
+        try
+        {
             Log.d(LOG_TAG,countriesJsonStr);
             getCountriesDataFromJson(countriesJsonStr);
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }

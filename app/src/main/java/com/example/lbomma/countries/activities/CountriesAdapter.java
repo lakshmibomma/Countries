@@ -34,12 +34,10 @@ public class CountriesAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // our view is pretty simple here --- just a text view
-        // we'll keep the UI functional with a simple (and slow!) binding.
-
+        // Bind the data with the User interface elements
         TextView tv = (TextView)view;
-        String name = cursor.getString(CountiresFragment.COL_COUNTRY_NAME);
-        String region = cursor.getString(CountiresFragment.COL_COUNTRY_REGION);
+        String name = cursor.getString(CountriesFragment.COL_COUNTRY_NAME);
+        String region = cursor.getString(CountriesFragment.COL_COUNTRY_REGION);
 
         String message = "Country : " + name+ " , " +"Region : " + region;
         tv.setText(message);
