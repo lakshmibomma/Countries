@@ -27,18 +27,12 @@ import com.example.lbomma.countries.data.CountryContract;
 /**
  * Created by LBomma on 4/9/15.
  */
-public class CountiresFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CountriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int COUNTRY_LOADER = 0;
-    // For the forecast view we're showing only a small subset of the stored data.
-    // Specify the columns we need.
+
     private static final String[] COUNTRY_COLUMNS = {
-            // In this case the id needs to be fully qualified with a table name, since
-            // the content provider joins the location & weather tables in the background
-            // (both have an _id column)
-            // On the one hand, that's annoying.  On the other, you can search the weather table
-            // using the location set by the user, which is only in the Location table.
-            // So the convenience is worth it.
+            //Column names for the country table
             CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
             CountryContract.CountryEntry.COLUMN_NAME,
             CountryContract.CountryEntry.COLUMN_REGION,
@@ -47,10 +41,11 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
             CountryContract.CountryEntry.COLUMN_NATIONALITY,
             CountryContract.CountryEntry.COLUMN_POPULATION,
             CountryContract.CountryEntry.COLUMN_LATITUDE,
-            CountryContract.CountryEntry.COLUMN_LANGITUDE
+            CountryContract.CountryEntry.COLUMN_LONGITUDE
     };
 
-    // These indices are tied to COUNTRIES_COLUMNS.  If COUNTRIES_COLUMNS changes, these
+    // These indices are tied to COUNTRIES_COLUMNS.
+    // If COUNTRIES_COLUMNS changes, these
     // must change.
     static final int COL_COUNTRY_ID = 0;
     static final int COL_COUNTRY_NAME = 1;
@@ -60,7 +55,7 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
     static final int COL_COUNTRY_NATIONALITY = 5;
     static final int COL_COUNTRY_POPULATION = 6;
     static final int COL_COUNTRY_LATITUDE = 7;
-    static final int COL_COUNTRY_LANGITUDE = 8;
+    static final int COL_COUNTRY_LONGITUDE = 8;
 
 
 
@@ -70,7 +65,7 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
     private static final String PREF_USER_REFRESHED = "user_refreshed";
     private boolean isDataRefreshed;
 
-    public CountiresFragment() {
+    public CountriesFragment() {
     }
 
     @Override
