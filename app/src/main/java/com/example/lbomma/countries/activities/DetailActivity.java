@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.example.lbomma.countries.R;
 import com.example.lbomma.countries.data.CountryContract;
 
+import java.util.Locale;
+
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -104,13 +106,8 @@ public class DetailActivity extends ActionBarActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-            // The detail Activity called via intent.  Inspect the intent for forecast data.
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                countryDetails = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.detail_text))
-                        .setText(countryDetails);
-            }
+            // The detail Activity called via intent.  Inspect the intent for country data.
+
             Button mapButton = (Button) rootView.findViewById(R.id.locate_on_map);
             mapButton.setOnClickListener(new View.OnClickListener()
             {
@@ -118,9 +115,17 @@ public class DetailActivity extends ActionBarActivity {
                 public void onClick(View arg0)
                 {
                     //To do map location latitude and longitude fix
-                    Uri geoLocation = Uri.parse("geo:33.0,65.0").buildUpon()
-                            .build();
+                    Bundle extras = getActivity().getIntent().getExtras();
 
+                    String latitude = extras.getString("latitude");
+                    String longitude = extras.getString("longitude");
+
+                    System.out.println( "latitude  is  " + latitude) ;
+
+                    String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude);
+
+                    Uri geoLocation = Uri.parse(uri).buildUpon()
+                            .build();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(geoLocation);
                     startActivity(intent);
@@ -168,6 +173,8 @@ public class DetailActivity extends ActionBarActivity {
                 System.out.println( "country details are  " + data.getString(COL_COUNTRY_LANGITUDE)) ;
                 TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
                 detailTextView.setText(data.getString(COL_COUNTRY_NAME));
+                getActivity().getIntent().putExtra("latitude",data.getString(COL_COUNTRY_LATITUDE));
+                getActivity().getIntent().putExtra("longitude",data.getString(COL_COUNTRY_LANGITUDE));
             }
 
 //            String dateString = Utility.formatDate(

@@ -1,9 +1,11 @@
 package com.example.lbomma.countries.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -26,7 +28,6 @@ import com.example.lbomma.countries.data.CountryContract;
  * Created by LBomma on 4/9/15.
  */
 public class CountiresFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
 
     private static final int COUNTRY_LOADER = 0;
     // For the forecast view we're showing only a small subset of the stored data.
@@ -65,6 +66,9 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
 
 
     private CountriesAdapter mCountriestAdapter;
+
+    private static final String PREF_USER_REFRESHED = "user_refreshed";
+    private boolean isDataRefreshed;
 
     public CountiresFragment() {
     }
@@ -150,7 +154,14 @@ public class CountiresFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onStart() {
         super.onStart();
-        updateCountriesList();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        isDataRefreshed = sp.getBoolean(PREF_USER_REFRESHED, false);
+        if (!isDataRefreshed) {
+            updateCountriesList();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean(PREF_USER_REFRESHED,true).commit();
+        }
     }
 
     @Override
