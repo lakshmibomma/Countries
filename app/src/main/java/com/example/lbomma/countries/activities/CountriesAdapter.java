@@ -35,11 +35,15 @@ public class CountriesAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Bind the data with the User interface elements
-        TextView tv = (TextView)view;
+        TextView countryTextView = (TextView) view.findViewById(R.id.list_item_country_textView);
         String name = cursor.getString(CountriesFragment.COL_COUNTRY_NAME);
-        String region = cursor.getString(CountriesFragment.COL_COUNTRY_REGION);
+        name = "Country : " + name;
+        countryTextView.setText(name);
 
-        String message = "Country : " + name+ " , " +"Region : " + region;
-        tv.setText(message);
+        TextView regionTextView = (TextView) view.findViewById(R.id.list_item_region_textView);
+        String region = cursor.getString(CountriesFragment.COL_COUNTRY_REGION);
+        region = "Region : " + region;
+        regionTextView.setText(region);
+
     }
 }

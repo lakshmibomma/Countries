@@ -7,7 +7,29 @@
     tools:context="com.example.lbomma.countries.DetailActivity$PlaceholderFragment">
 
     <TextView android:layout_width="wrap_content"
-        android:id="@+id/detail_text"
+        android:id="@+id/country_text"
+        android:layout_height="wrap_content" />
+
+    <TextView android:layout_width="wrap_content"
+        android:id="@+id/region_text"
+        android:layout_below="@+id/country_text"
+        android:layout_height="wrap_content" />
+
+    <TextView android:layout_width="wrap_content"
+        android:id="@+id/capital_text"
+        android:layout_below="@+id/region_text"
+        android:layout_height="wrap_content" />
+
+
+    <TextView android:layout_width="wrap_content"
+        android:id="@+id/population_text"
+        android:layout_below="@+id/capital_text"
+        android:layout_height="wrap_content" />
+
+
+    <TextView android:layout_width="wrap_content"
+        android:id="@+id/currency_text"
+        android:layout_below="@+id/population_text"
         android:layout_height="wrap_content" />
 
     <Button
@@ -15,10 +37,9 @@
         android:layout_height="wrap_content"
         android:text="Map"
         android:id="@+id/locate_on_map"
-        android:layout_below="@+id/detail_text"
+        android:layout_alignParentLeft="@+id/capital_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         />
-
 
 </RelativeLayout>

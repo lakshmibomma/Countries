@@ -52,10 +52,11 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void>
         final String COUNTRY_NATIONALITY = "nationality";
         final String COUNTRY_POPULATION = "population";
         final String COUNTRY_LATITUDE = "latitude";
-        final String COUNTRY_LANGITUDE = "langitude";
+        final String COUNTRY_LONGITUDE = "langitude";
 
 
         // These are the names of the JSON objects that need to be extracted.
+        System.out.println( "countriesJsonStr  are  " + countriesJsonStr) ;
 
         JSONArray jsonArray = new JSONArray(countriesJsonStr);
 
@@ -66,6 +67,8 @@ public class FetchCountriesTask extends AsyncTask<String, Void, Void>
             for(int i=0;i<jsonArray.length();i++)
             {
                 JSONObject jb = jsonArray.getJSONObject(i);
+                System.out.println( "jb  are  " + jb) ;
+
 
                 ContentValues countryValues = new ContentValues();
 
