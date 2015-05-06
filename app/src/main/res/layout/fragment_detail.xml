@@ -11,11 +11,14 @@
     <TextView android:layout_width="wrap_content"
         android:id="@+id/country_text"
         android:layout_height="0dp"
+        android:text="blah blah blah"
+
         android:layout_weight="1" />
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/region_text"
         android:layout_below="@+id/country_text"
+        android:text="blah blah blah"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
@@ -28,6 +31,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/capital_text"
             android:layout_below="@+id/region_text"
+            android:text="blah blah blah"
             android:layout_weight="1"/>
 
         <Button
@@ -44,12 +48,14 @@
         android:id="@+id/population_text"
         android:layout_below="@+id/capital_text"
         android:layout_height="0dp"
+        android:text="blah blah blah"
         android:layout_weight="1" />
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/currency_text"
         android:layout_below="@+id/population_text"
         android:layout_height="0dp"
+        android:text="blah blah blah"
         android:layout_weight="1" />
 
     </LinearLayout>
