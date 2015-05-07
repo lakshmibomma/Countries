@@ -45,16 +45,6 @@ public class CountryContentProvider extends ContentProvider{
                 null,
                 null,
                 sortOrder);
-
-//
-//        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                sLocationSettingAndDaySelection,
-//                new String[]{countryValues, name},
-//                null,
-//                null,
-//                sortOrder
-//        );
     }
 
     /*

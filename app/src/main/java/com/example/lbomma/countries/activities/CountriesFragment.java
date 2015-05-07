@@ -119,6 +119,7 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
                     System.out.println( "country name is " + cursor.getString(COL_COUNTRY_NAME)) ;
                     System.out.println( "country latitude is " + cursor.getDouble(COL_COUNTRY_LATITUDE)) ;
 
+                    
                     Intent intent = new Intent(getActivity(), DetailActivity.class)
                             .setData(CountryContract.CountryEntry.buildSelectedCountry(
                                     cursor.getString(COL_COUNTRY_NAME)
