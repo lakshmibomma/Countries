@@ -35,6 +35,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final int DETAIL_LOADER = 0;
     private static final String COUNTRY_SHARE_HASHTAG = " #Countries";
     private String mcountryDetails;
+    static final String DETAIL_URI = "URI";
+
 
     private static final String[] COUNTRY_COLUMNS =
             {
@@ -61,6 +63,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_COUNTRY_LATITUDE = 7;
     static final int COL_COUNTRY_LONGITUDE = 8;
 
+    private Uri mUri;
+
     public DetailFragment()
     {
         setHasOptionsMenu(true);
@@ -71,6 +75,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            mUri = arguments.getParcelable(DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         // The detail Activity called via intent.  Inspect the intent for country data.
@@ -130,8 +139,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
         Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent.getData() == null) {
+        if (mUri == null) {
             return null;
         }
 
@@ -139,7 +147,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // creating a Cursor for the data being displayed.
         return new CursorLoader(
                 getActivity(),
-                intent.getData(),
+                mUri,
                 COUNTRY_COLUMNS,
                 null,
                 null,

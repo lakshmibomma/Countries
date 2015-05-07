@@ -1,6 +1,5 @@
 package com.example.lbomma.countries.activities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,6 +30,12 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
 
     private static final int COUNTRY_LOADER = 0;
 
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri);
+    }
     private static final String[] COUNTRY_COLUMNS = {
             //Column names for the country table
             CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
@@ -119,12 +124,15 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
                     System.out.println( "country name is " + cursor.getString(COL_COUNTRY_NAME)) ;
                     System.out.println( "country latitude is " + cursor.getDouble(COL_COUNTRY_LATITUDE)) ;
 
-                    
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(CountryContract.CountryEntry.buildSelectedCountry(
-                                    cursor.getString(COL_COUNTRY_NAME)
-                            ));
-                    startActivity(intent);
+                    ((CountriesListner) getActivity())
+                            .onItemSelected(CountryContract.CountryEntry.buildSelectedCountry(
+                                    cursor.getString(COL_COUNTRY_NAME)));
+
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+//                            .setData(CountryContract.CountryEntry.buildSelectedCountry(
+//                                    cursor.getString(COL_COUNTRY_NAME)
+//                            ));
+//                    startActivity(intent);
                 }
             }
         });
