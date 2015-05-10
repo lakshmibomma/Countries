@@ -180,11 +180,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             TextView countryTextView = (TextView)getView().findViewById(R.id.country_text);
             countryTextView.setText(data.getString(COL_COUNTRY_NAME));
             TextView regionTextView = (TextView)getView().findViewById(R.id.region_text);
-            String region = data.getString(COL_COUNTRY_REGION);
-//                if (region == null)
-//                {
-            regionTextView.setText(data.getString(COL_COUNTRY_REGION));
-            // }
+            String region = "";
+            region = data.getString(COL_COUNTRY_REGION);
+            if (region != null && !region.isEmpty())
+            {
+                regionTextView.setText(region);
+            }
+            else
+            {
+                regionTextView.setText("");
+            }
+
             TextView capitalTextView = (TextView)getView().findViewById(R.id.capital_text);
             capitalTextView.setText(data.getString(COL_COUNTRY_CAPITAL));
             TextView populationTextView = (TextView)getView().findViewById(R.id.population_text);

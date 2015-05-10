@@ -12,7 +12,7 @@
         android:id="@+id/country_text"
         android:layout_height="0dp"
         android:text="blah blah blah"
-
+        android:textSize="24sp"
         android:layout_weight="1" />
 
     <TextView android:layout_width="wrap_content"
@@ -20,6 +20,7 @@
         android:layout_below="@+id/country_text"
         android:text="blah blah blah"
         android:layout_height="0dp"
+        android:textSize="24sp"
         android:layout_weight="1" />
 
     <LinearLayout
@@ -32,6 +33,7 @@
             android:id="@+id/capital_text"
             android:layout_below="@+id/region_text"
             android:text="blah blah blah"
+            android:textSize="24sp"
             android:layout_weight="1"/>
 
         <Button
@@ -48,14 +50,18 @@
         android:layout_below="@+id/capital_text"
         android:layout_height="0dp"
         android:text="blah blah blah"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textSize="24sp"
+        />
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/currency_text"
         android:layout_below="@+id/population_text"
         android:layout_height="0dp"
         android:text="blah blah blah"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textSize="24sp"
+        />
 
     </LinearLayout>
 </ScrollView>

@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/touch_selector">
+    >
 
     <TextView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:id="@+id/list_item_country_textView"
         android:text="blah blah blah"
+        android:textSize="24sp"
         android:layout_weight="1" />
 
     <TextView
@@ -18,7 +21,8 @@
         android:layout_height="0dp"
         android:id="@+id/list_item_region_textView"
         android:text="blah blah blah"
-        android:layout_weight="1" />
+        android:textSize="24sp"
 
+        android:layout_weight="1" />
 
     </LinearLayout>
