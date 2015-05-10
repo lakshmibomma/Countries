@@ -29,8 +29,13 @@
         </activity>
 
         <provider
-            android:authorities="com.example.lbomma.countries.app"
-            android:name=".data.CountryContentProvider" />
+            android:name=".data.CountryContentProvider"
+            android:authorities="com.example.lbomma.countries.app" />
+
+        <service
+            android:name=".CountriesIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

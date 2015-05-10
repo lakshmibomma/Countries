@@ -1,5 +1,6 @@
 package com.example.lbomma.countries.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.lbomma.countries.CountriesIntentService;
 import com.example.lbomma.countries.R;
 import com.example.lbomma.countries.data.CountryContract;
 
@@ -29,13 +31,11 @@ import com.example.lbomma.countries.data.CountryContract;
 public class CountriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int COUNTRY_LOADER = 0;
+    private int mPosition = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
+    private ListView mListView;
 
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        public void onItemSelected(Uri dateUri);
-    }
+
     private static final String[] COUNTRY_COLUMNS = {
             //Column names for the country table
             CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
@@ -66,6 +66,7 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     private CountriesAdapter mCountriesAdapter;
     private static final String PREF_USER_REFRESHED = "user_refreshed";
     private boolean isDataRefreshed;
+
 
     public CountriesFragment() {
     }
@@ -111,9 +112,9 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_countries);
-        listView.setAdapter(mCountriesAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        mListView  = (ListView) rootView.findViewById(R.id.listview_countries);
+        mListView.setAdapter(mCountriesAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
@@ -134,8 +135,15 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
 //                            ));
 //                    startActivity(intent);
                 }
+                mPosition = position;
+
             }
         });
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
 
         return rootView;
     }
@@ -149,9 +157,14 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
 
     private void updateCountriesList()
     {
-        FetchCountriesTask countryTask = new FetchCountriesTask(getActivity());
-        countryTask.execute();
-        getLoaderManager().restartLoader(COUNTRY_LOADER, null, this);
+
+        Intent intent = new Intent(getActivity(), CountriesIntentService.class);
+        getActivity().startService(intent);
+
+
+//        FetchCountriesTask countryTask = new FetchCountriesTask(getActivity());
+//        countryTask.execute();
+        //getLoaderManager().restartLoader(COUNTRY_LOADER, null, this);
 
     }
 
@@ -190,12 +203,28 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor)
     {
         mCountriesAdapter.swapCursor(cursor);
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mListView.smoothScrollToPosition(mPosition);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader)
     {
         mCountriesAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 }
 
