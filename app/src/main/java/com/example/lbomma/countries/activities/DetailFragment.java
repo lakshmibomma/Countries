@@ -28,16 +28,22 @@ import java.util.Locale;
 /**
  * Created by LBomma on 5/4/15.
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
-{
-    private ShareActionProvider mShareActionProvider;
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    static final String DETAIL_URI = "URI";
+    // these constants values correspond to the projection defined above with respect to country columns,
+    // and must change if the columns order changes
+    static final int COL_COUNTRY_ID = 0;
+    static final int COL_COUNTRY_NAME = 1;
+    static final int COL_COUNTRY_REGION = 2;
+    static final int COL_COUNTRY_CAPITAL = 3;
+    static final int COL_COUNTRY_CURRENCY = 4;
+    static final int COL_COUNTRY_POPULATION = 5;
+    static final int COL_COUNTRY_NATIONALITY = 6;
+    static final int COL_COUNTRY_LATITUDE = 7;
+    static final int COL_COUNTRY_LONGITUDE = 8;
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     private static final int DETAIL_LOADER = 0;
     private static final String COUNTRY_SHARE_HASHTAG = " #Countries";
-    private String mcountryDetails;
-    static final String DETAIL_URI = "URI";
-
-
     private static final String[] COUNTRY_COLUMNS =
             {
                     CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
@@ -50,33 +56,21 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     CountryContract.CountryEntry.COLUMN_LATITUDE,
                     CountryContract.CountryEntry.COLUMN_LONGITUDE,
             };
-
-    // these constants values correspond to the projection defined above with respect to country columns,
-    // and must change if the columns order changes
-    static final int COL_COUNTRY_ID = 0;
-    static final int COL_COUNTRY_NAME = 1;
-    static final int COL_COUNTRY_REGION = 2;
-    static final int COL_COUNTRY_CAPITAL = 3;
-    static final int COL_COUNTRY_CURRENCY = 4;
-    static final int COL_COUNTRY_POPULATION = 5;
-    static final int COL_COUNTRY_NATIONALITY = 6;
-    static final int COL_COUNTRY_LATITUDE = 7;
-    static final int COL_COUNTRY_LONGITUDE = 8;
-
+    private ShareActionProvider mShareActionProvider;
+    private String mcountryDetails;
+    private Button mapButton;
     private Uri mUri;
 
-    public DetailFragment()
-    {
+    public DetailFragment() {
         setHasOptionsMenu(true);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        if(arguments != null) {
+        if (arguments != null) {
             mUri = arguments.getParcelable(DETAIL_URI);
         }
 
@@ -84,21 +78,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // The detail Activity called via intent.  Inspect the intent for country data.
 
-        Button mapButton = (Button) rootView.findViewById(R.id.locate_on_map);
-        mapButton.setOnClickListener(new View.OnClickListener()
-        {
+        mapButton = (Button) rootView.findViewById(R.id.locate_on_map);
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0)
-            {
+            public void onClick(View arg0) {
                 //To do map location latitude and longitude fix
                 Bundle extras = getActivity().getIntent().getExtras();
 
                 String latitude = extras.getString("latitude");
                 String longitude = extras.getString("longitude");
 
-                System.out.println( "latitude  is  " + latitude) ;
+                System.out.println("latitude  is  " + latitude);
 
-                String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude);
+                String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude) + "?z=7";
 
                 Uri geoLocation = Uri.parse(uri).buildUpon()
                         .build();
@@ -107,6 +99,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 startActivity(intent);
             }
         });
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras == null) {
+            mapButton.setEnabled(false);
+        }
+
 
         return rootView;
     }
@@ -129,15 +126,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args)
-    {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.v(LOG_TAG, "In onCreateLoader");
         if (mUri == null) {
             return null;
@@ -164,44 +159,65 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
-    {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "In onLoadFinished");
 
-        if (data.moveToFirst())
-        {
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_REGION)) ;
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_NAME)) ;
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_LATITUDE)) ;
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_LONGITUDE)) ;
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_POPULATION)) ;
-            System.out.println( "country details are  " + data.getString(COL_COUNTRY_NATIONALITY)) ;
 
-            TextView countryTextView = (TextView)getView().findViewById(R.id.country_text);
+        if (data.moveToFirst()) {
+            getActivity().getIntent().putExtra("latitude", data.getString(COL_COUNTRY_LATITUDE));
+            getActivity().getIntent().putExtra("longitude", data.getString(COL_COUNTRY_LONGITUDE));
+
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_REGION));
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_NAME));
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_LATITUDE));
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_LONGITUDE));
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_POPULATION));
+            System.out.println("country details are  " + data.getString(COL_COUNTRY_NATIONALITY));
+
+            TextView countryTextView = (TextView) getView().findViewById(R.id.country_text);
             countryTextView.setText(data.getString(COL_COUNTRY_NAME));
-            TextView regionTextView = (TextView)getView().findViewById(R.id.region_text);
-            String region = "";
-            region = data.getString(COL_COUNTRY_REGION);
-            if (region != null && !region.isEmpty())
-            {
+
+            TextView regionTextView = (TextView) getView().findViewById(R.id.region_text);
+            String region = data.getString(COL_COUNTRY_REGION);
+            if (region != null && !region.isEmpty()) {
                 regionTextView.setText(region);
-            }
-            else
-            {
-                regionTextView.setText("");
+            } else {
+                regionTextView.setText("Not Applicable");
             }
 
-            TextView capitalTextView = (TextView)getView().findViewById(R.id.capital_text);
-            capitalTextView.setText(data.getString(COL_COUNTRY_CAPITAL));
-            TextView populationTextView = (TextView)getView().findViewById(R.id.population_text);
-            populationTextView.setText(data.getString(COL_COUNTRY_POPULATION));
-            TextView currencyTextView = (TextView)getView().findViewById(R.id.currency_text);
-            currencyTextView.setText(data.getString(COL_COUNTRY_CURRENCY));
+            TextView capitalTextView = (TextView) getView().findViewById(R.id.capital_text);
+            String capital = data.getString(COL_COUNTRY_CAPITAL);
+            if (capital != null && !capital.isEmpty()) {
+                capitalTextView.setText(capital);
+            } else {
+                capitalTextView.setText("Not Applicable");
+            }
+
+            TextView populationTextView = (TextView) getView().findViewById(R.id.population_text);
+
+            String population = data.getString(COL_COUNTRY_POPULATION);
+            if (population != null && !population.isEmpty() && !population.equals("null")) {
+                populationTextView.setText(population);
+            } else {
+                populationTextView.setText("Not Applicable");
+            }
+            TextView currencyTextView = (TextView) getView().findViewById(R.id.currency_text);
+
+            String currency = data.getString(COL_COUNTRY_CURRENCY);
+            if (currency != null && !currency.isEmpty()) {
+                currencyTextView.setText(currency);
+            } else {
+                currencyTextView.setText("Not Applicable");
+            }
+
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (extras != null) {
+                mapButton.setEnabled(true);
+            }
 
             mcountryDetails = String.format("Country name: %s Region: %s Capital:%s Population: %s", countryTextView.getText(), regionTextView.getText(), capitalTextView.getText(), populationTextView.getText());
 
-            getActivity().getIntent().putExtra("latitude",data.getString(COL_COUNTRY_LATITUDE));
-            getActivity().getIntent().putExtra("longitude",data.getString(COL_COUNTRY_LONGITUDE));
+
         }
 
         // If onCreateOptionsMenu has already happened, we need to update the share intent now.
@@ -211,7 +227,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader)
-    {
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 }

@@ -42,7 +42,13 @@ public class CountriesAdapter extends CursorAdapter {
 
         TextView regionTextView = (TextView) view.findViewById(R.id.list_item_region_textView);
         String region = cursor.getString(CountriesFragment.COL_COUNTRY_REGION);
-        region = "Region : " + region;
+        if (region == null || region.isEmpty()) {
+            region = "Region : " + "Not Applicable";
+
+        } else {
+            region = "Region : " + region;
+
+        }
         regionTextView.setText(region);
 
     }

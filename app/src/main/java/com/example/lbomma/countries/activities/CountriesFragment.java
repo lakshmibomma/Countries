@@ -91,12 +91,6 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_refresh)
-//        {
-//            updateCountriesList();
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -113,6 +107,7 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
 
         // Get a reference to the ListView, and attach this adapter to it.
         mListView  = (ListView) rootView.findViewById(R.id.listview_countries);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setAdapter(mCountriesAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -129,12 +124,8 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
                             .onItemSelected(CountryContract.CountryEntry.buildSelectedCountry(
                                     cursor.getString(COL_COUNTRY_NAME)));
 
-//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                            .setData(CountryContract.CountryEntry.buildSelectedCountry(
-//                                    cursor.getString(COL_COUNTRY_NAME)
-//                            ));
-//                    startActivity(intent);
                 }
+
                 mPosition = position;
 
             }
@@ -160,12 +151,6 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
 
         Intent intent = new Intent(getActivity(), CountriesIntentService.class);
         getActivity().startService(intent);
-
-
-//        FetchCountriesTask countryTask = new FetchCountriesTask(getActivity());
-//        countryTask.execute();
-        //getLoaderManager().restartLoader(COUNTRY_LOADER, null, this);
-
     }
 
     @Override
@@ -187,7 +172,7 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle)
     {
 
-        // Sort order:  Ascending, by date.
+        // Sort order:  Ascending, by name.
         String sortOrder = CountryContract.CountryEntry.COLUMN_NAME;
         Uri countryUri = CountryContract.CountryEntry.buildCountriesList();
 
@@ -207,6 +192,7 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
+            mListView.setSelection(mPosition);
         }
     }
 

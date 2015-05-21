@@ -11,14 +11,13 @@
     <TextView android:layout_width="wrap_content"
         android:id="@+id/country_text"
         android:layout_height="0dp"
-        android:text="blah blah blah"
+        android:text="Please select a country"
         android:textSize="24sp"
         android:layout_weight="1" />
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/region_text"
         android:layout_below="@+id/country_text"
-        android:text="blah blah blah"
         android:layout_height="0dp"
         android:textSize="24sp"
         android:layout_weight="1" />
@@ -32,14 +31,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/capital_text"
             android:layout_below="@+id/region_text"
-            android:text="blah blah blah"
+            android:layout_gravity="center_vertical"
             android:textSize="24sp"
             android:layout_weight="1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_action_room"
+            android:text="Maps"
             android:id="@+id/locate_on_map"
             />
 
@@ -49,7 +48,6 @@
         android:id="@+id/population_text"
         android:layout_below="@+id/capital_text"
         android:layout_height="0dp"
-        android:text="blah blah blah"
         android:layout_weight="1"
         android:textSize="24sp"
         />
@@ -58,7 +56,6 @@
         android:id="@+id/currency_text"
         android:layout_below="@+id/population_text"
         android:layout_height="0dp"
-        android:text="blah blah blah"
         android:layout_weight="1"
         android:textSize="24sp"
         />
