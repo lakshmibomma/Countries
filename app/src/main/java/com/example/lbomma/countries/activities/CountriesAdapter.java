@@ -14,26 +14,27 @@ import com.example.lbomma.countries.R;
 /**
  * Created by LBomma on 4/25/15.
  */
-public class CountriesAdapter extends CursorAdapter {
-    public CountriesAdapter(Context context, Cursor c, int flags) {
+public class CountriesAdapter extends CursorAdapter
+{
+    public CountriesAdapter(Context context, Cursor c, int flags)
+    {
         super(context, c, flags);
     }
 
-    /*
-        Remember that these views are reused as needed.
-     */
+
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public View newView(Context context, Cursor cursor, ViewGroup parent)
+    {
         View view = LayoutInflater.from(context).inflate(R.layout.list_item_country, parent, false);
 
         return view;
     }
 
-    /*
-        This is where we fill-in the views with the contents of the cursor.
-     */
+    /* Fill-in the views with the contents of the cursor.*/
+
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor)
+    {
         // Bind the data with the User interface elements
         TextView countryTextView = (TextView) view.findViewById(R.id.list_item_country_textView);
         String name = cursor.getString(CountriesFragment.COL_COUNTRY_NAME);
@@ -42,14 +43,14 @@ public class CountriesAdapter extends CursorAdapter {
 
         TextView regionTextView = (TextView) view.findViewById(R.id.list_item_region_textView);
         String region = cursor.getString(CountriesFragment.COL_COUNTRY_REGION);
-        if (region == null || region.isEmpty()) {
+        if (region == null || region.isEmpty())
+        {
             region = "Region : " + "Not Applicable";
-
-        } else {
+        }
+        else
+        {
             region = "Region : " + region;
-
         }
         regionTextView.setText(region);
-
     }
 }

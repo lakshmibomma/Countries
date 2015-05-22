@@ -28,15 +28,16 @@ import com.example.lbomma.countries.data.CountryContract;
 /**
  * Created by LBomma on 4/9/15.
  */
-public class CountriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
+public class CountriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
+{
     private static final int COUNTRY_LOADER = 0;
     private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
     private ListView mListView;
 
 
-    private static final String[] COUNTRY_COLUMNS = {
+    private static final String[] COUNTRY_COLUMNS =
+    {
             //Column names for the country table
             CountryContract.CountryEntry.TABLE_NAME + "." + CountryContract.CountryEntry._ID,
             CountryContract.CountryEntry.COLUMN_NAME,
@@ -68,7 +69,8 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     private boolean isDataRefreshed;
 
 
-    public CountriesFragment() {
+    public CountriesFragment()
+    {
     }
 
     @Override
@@ -188,9 +190,9 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor)
     {
         mCountriesAdapter.swapCursor(cursor);
-        if (mPosition != ListView.INVALID_POSITION) {
-            // If we don't need to restart the loader, and there's a desired position to restore
-            // to, do so now.
+        if (mPosition != ListView.INVALID_POSITION)
+        {
+            //restore the position
             mListView.smoothScrollToPosition(mPosition);
             mListView.setSelection(mPosition);
         }
@@ -203,11 +205,13 @@ public class CountriesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState)
+    {
         // When tablets rotate, the currently selected list item needs to be saved.
         // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
         // so check for that before storing.
-        if (mPosition != ListView.INVALID_POSITION) {
+        if (mPosition != ListView.INVALID_POSITION)
+        {
             outState.putInt(SELECTED_KEY, mPosition);
         }
         super.onSaveInstanceState(outState);

@@ -22,14 +22,10 @@ public class CountryDblHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         final String SQL_CREATE_COUNTRIES_TABLE = "CREATE TABLE " + CountryEntry.TABLE_NAME + " (" +
-                // Why AutoIncrement here, and not above?
-                // Unique keys will be auto-generated in either case.  But for weather
-                // forecasting, it's reasonable to assume the user will want information
-                // for a certain date and all dates *following*, so the forecast data
-                // should be sorted accordingly.
+
                 CountryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
-                // the ID of the location entry associated with this weather data
+                // the ID of the location entry associated with this country data
                 CountryEntry.COLUMN_NAME + " text not null, " +
                 CountryEntry.COLUMN_REGION + " text not null, " +
                 CountryEntry.COLUMN_CAPITAL + " text not null, " +

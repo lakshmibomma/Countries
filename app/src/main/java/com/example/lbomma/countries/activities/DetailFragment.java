@@ -28,7 +28,8 @@ import java.util.Locale;
 /**
  * Created by LBomma on 5/4/15.
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
+{
     static final String DETAIL_URI = "URI";
     // these constants values correspond to the projection defined above with respect to country columns,
     // and must change if the columns order changes
@@ -61,34 +62,32 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private Button mapButton;
     private Uri mUri;
 
-    public DetailFragment() {
+    public DetailFragment()
+    {
         setHasOptionsMenu(true);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         Bundle arguments = getArguments();
-        if (arguments != null) {
+        if (arguments != null)
+        {
             mUri = arguments.getParcelable(DETAIL_URI);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        // The detail Activity called via intent.  Inspect the intent for country data.
-
         mapButton = (Button) rootView.findViewById(R.id.locate_on_map);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                //To do map location latitude and longitude fix
                 Bundle extras = getActivity().getIntent().getExtras();
 
                 String latitude = extras.getString("latitude");
                 String longitude = extras.getString("longitude");
-
-                System.out.println("latitude  is  " + latitude);
 
                 String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude) + "?z=7";
 
@@ -100,7 +99,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
         Bundle extras = getActivity().getIntent().getExtras();
-        if (extras == null) {
+        if (extras == null)
+        {
             mapButton.setEnabled(false);
         }
 
@@ -109,7 +109,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detailfragment, menu);
 
@@ -120,21 +121,25 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-        if (mcountryDetails != null) {
+        if (mcountryDetails != null)
+        {
             mShareActionProvider.setShareIntent(createShareCountryIntent());
         }
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
         Log.v(LOG_TAG, "In onCreateLoader");
-        if (mUri == null) {
+        if (mUri == null)
+        {
             return null;
         }
 
@@ -150,7 +155,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         );
     }
 
-    private Intent createShareCountryIntent() {
+    private Intent createShareCountryIntent()
+    {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
@@ -159,59 +165,66 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
         Log.v(LOG_TAG, "In onLoadFinished");
 
-
-        if (data.moveToFirst()) {
+        if (data.moveToFirst())
+        {
             getActivity().getIntent().putExtra("latitude", data.getString(COL_COUNTRY_LATITUDE));
             getActivity().getIntent().putExtra("longitude", data.getString(COL_COUNTRY_LONGITUDE));
-
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_REGION));
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_NAME));
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_LATITUDE));
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_LONGITUDE));
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_POPULATION));
-            System.out.println("country details are  " + data.getString(COL_COUNTRY_NATIONALITY));
 
             TextView countryTextView = (TextView) getView().findViewById(R.id.country_text);
             countryTextView.setText(data.getString(COL_COUNTRY_NAME));
 
             TextView regionTextView = (TextView) getView().findViewById(R.id.region_text);
             String region = data.getString(COL_COUNTRY_REGION);
-            if (region != null && !region.isEmpty()) {
+            if (region != null && !region.isEmpty())
+            {
                 regionTextView.setText(region);
-            } else {
+            }
+            else
+            {
                 regionTextView.setText("Not Applicable");
             }
 
             TextView capitalTextView = (TextView) getView().findViewById(R.id.capital_text);
             String capital = data.getString(COL_COUNTRY_CAPITAL);
-            if (capital != null && !capital.isEmpty()) {
+            if (capital != null && !capital.isEmpty())
+            {
                 capitalTextView.setText(capital);
-            } else {
+            }
+            else
+            {
                 capitalTextView.setText("Not Applicable");
             }
 
             TextView populationTextView = (TextView) getView().findViewById(R.id.population_text);
 
             String population = data.getString(COL_COUNTRY_POPULATION);
-            if (population != null && !population.isEmpty() && !population.equals("null")) {
+            if (population != null && !population.isEmpty() && !population.equals("null"))
+            {
                 populationTextView.setText(population);
-            } else {
+            }
+            else
+            {
                 populationTextView.setText("Not Applicable");
             }
             TextView currencyTextView = (TextView) getView().findViewById(R.id.currency_text);
 
             String currency = data.getString(COL_COUNTRY_CURRENCY);
-            if (currency != null && !currency.isEmpty()) {
+            if (currency != null && !currency.isEmpty())
+            {
                 currencyTextView.setText(currency);
-            } else {
+            }
+            else
+            {
                 currencyTextView.setText("Not Applicable");
             }
 
             Bundle extras = getActivity().getIntent().getExtras();
-            if (extras != null) {
+            if (extras != null)
+            {
                 mapButton.setEnabled(true);
             }
 
@@ -220,13 +233,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         }
 
-        // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-        if (mShareActionProvider != null) {
+       //shared provider
+       if (mShareActionProvider != null)
+       {
             mShareActionProvider.setShareIntent(createShareCountryIntent());
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
     }
 }

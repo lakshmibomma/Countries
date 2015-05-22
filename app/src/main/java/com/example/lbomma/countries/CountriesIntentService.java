@@ -20,25 +20,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- */
-public class CountriesIntentService extends IntentService {
+public class CountriesIntentService extends IntentService
+{
     private final String LOG_TAG = CountriesIntentService.class.getSimpleName();
 
 
-    public CountriesIntentService() {
+    public CountriesIntentService()
+    {
         super("CountriesIntentService");
     }
 
-    /**
-     * Take the String representing the complete countries in JSON Format and
-     * pull out the data we need to construct the Strings needed for the wireframes.
-     *
-     * Fortunately parsing is easy:  constructor takes the JSON string and converts it
-     * into an Object hierarchy for us.
-     */
     private void getCountriesDataFromJson(String countriesJsonStr)
             throws JSONException {
 
@@ -87,7 +78,10 @@ public class CountriesIntentService extends IntentService {
                     {
                         latitude = latLong.getDouble(0);
                     }
-                    catch (JSONException ignored) {}
+                    catch (JSONException ignored)
+                    {
+
+                    }
 
                     if (latitude == null)
                     {
@@ -107,7 +101,10 @@ public class CountriesIntentService extends IntentService {
                     {
                         longitude = latLong.getDouble(1);
                     }
-                    catch (JSONException ignored) {}
+                    catch (JSONException ignored)
+                    {
+
+                    }
 
                     if (longitude == null)
                     {
@@ -141,8 +138,10 @@ public class CountriesIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
+    protected void onHandleIntent(Intent intent)
+    {
+        if (intent != null)
+        {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -164,7 +163,7 @@ public class CountriesIntentService extends IntentService {
                 Uri builtUri = Uri.parse(COUNTRIES_URL).buildUpon().build();
                 URL url = new URL(builtUri.toString());
 
-                // Create the request to OpenWeatherMap, and open the connection
+                // Create the request to mashape, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty(MSHAPES_KEY, mShapesApiKey);
@@ -175,14 +174,16 @@ public class CountriesIntentService extends IntentService {
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
+                if (inputStream == null)
+                {
                     // Nothing to do.
                     return;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null)
+                {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                     // But it does make debugging a *lot* easier if you print out the completed
                     // buffer for debugging.

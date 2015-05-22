@@ -21,43 +21,38 @@ public class CountryContract {
 
 
     /* Inner class that defines the table contents of the country table */
-    public static final class CountryEntry implements BaseColumns {
+    public static final class CountryEntry implements BaseColumns
+    {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_COUNTRY).build();
         public static final String TABLE_NAME = "country";        public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COUNTRY;
-        // Date, stored as long in milliseconds since the epoch
         public static final String COLUMN_NAME = "name";        public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COUNTRY;
-        // Weather id as returned by API, to identify the icon to be used
+        // Country api returning  column list
         public static final String COLUMN_REGION = "region";
-        // Short description and long description of the weather, as provided by API.
-        // e.g "clear" vs "sky is clear".
         public static final String COLUMN_CAPITAL = "capital";
-        // Min and max temperatures for the day (stored as floats)
         public static final String COLUMN_CURRENCY = "currency";
         public static final String COLUMN_NATIONALITY = "nationality";
-        // Humidity is stored as a float representing percentage
         public static final String COLUMN_POPULATION = "population";
         public static final String COLUMN_LATITUDE = "latitude";
         public static final String COLUMN_LONGITUDE = "longitude";
 
-        public static Uri buildCountryUri(long id) {
+        public static Uri buildCountryUri(long id)
+        {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildSelectedCountry(String countryname) {
+        public static Uri buildSelectedCountry(String countryname)
+        {
             return CONTENT_URI.buildUpon().appendPath(countryname).build();
         }
 
-        public static Uri buildCountriesList() {
+        public static Uri buildCountriesList()
+        {
             return CONTENT_URI.buildUpon().build();
         }
-
-        /*
-            Student: This is the buildWeatherLocation function you filled in.
-         */
 
         public static String getNameFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -70,9 +65,6 @@ public class CountryContract {
             else
                 return "";
         }
-
-
-
 
     }
 }

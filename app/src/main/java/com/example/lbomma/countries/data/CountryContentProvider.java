@@ -11,7 +11,8 @@ import android.net.Uri;
 /**
  * Created by LBomma on 4/16/15.
  */
-public class CountryContentProvider extends ContentProvider{
+public class CountryContentProvider extends ContentProvider
+{
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private CountryDblHelper mOpenHelper;
@@ -19,15 +20,12 @@ public class CountryContentProvider extends ContentProvider{
     static final int COUNTRY = 100;
     static final int COUNTRY_WITH_NAME = 101;
 
-    //location.location_setting = ?
     private static final String sCountryNameSelection =
             CountryContract.CountryEntry.TABLE_NAME+
                     "." + CountryContract.CountryEntry.COLUMN_NAME + " = ? ";
 
-
-
-    private Cursor getCountryBySelectedName(Uri uri, String[] projection, String sortOrder) {
-       // String countryValues = CountryContract.CountryEntry.getCountryDetailsFromUri(uri);
+    private Cursor getCountryBySelectedName(Uri uri, String[] projection, String sortOrder)
+    {
         String name = CountryContract.CountryEntry.getNameFromUri(uri);
 
         String[] selectionArgs;
@@ -35,7 +33,6 @@ public class CountryContentProvider extends ContentProvider{
 
             selection = sCountryNameSelection;
             selectionArgs = new String[]{name};
-
 
         return mOpenHelper.getReadableDatabase().query(
                 CountryContract.CountryEntry.TABLE_NAME,
@@ -47,19 +44,9 @@ public class CountryContentProvider extends ContentProvider{
                 sortOrder);
     }
 
-    /*
-        Students: Here is where you need to create the UriMatcher. This UriMatcher will
-        match each URI to the WEATHER, WEATHER_WITH_LOCATION, WEATHER_WITH_LOCATION_AND_DATE,
-        and LOCATION integer constants defined above.  You can test this by uncommenting the
-        testUriMatcher test within TestUriMatcher.
-     */
-    static UriMatcher buildUriMatcher() {
-        // I know what you're thinking.  Why create a UriMatcher when you can use regular
-        // expressions instead?  Because you're not crazy, that's why.
-
-        // All paths added to the UriMatcher have a corresponding code to return when a match is
-        // found.  The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case.
+    /* creating uri matcher */
+    static UriMatcher buildUriMatcher()
+    {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = CountryContract.CONTENT_AUTHORITY;
 
@@ -70,29 +57,24 @@ public class CountryContentProvider extends ContentProvider{
         return matcher;
     }
 
-    /*
-        Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
-        here.
-     */
+
     @Override
-    public boolean onCreate() {
+    public boolean onCreate()
+    {
         mOpenHelper = new CountryDblHelper(getContext());
         return true;
     }
 
-    /*
-        Students: Here's where you'll code the getType function that uses the UriMatcher.  You can
-        test this by uncommenting testGetType in TestProvider.
 
-     */
     @Override
-    public String getType(Uri uri) {
+    public String getType(Uri uri)
+    {
 
         // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
 
-        switch (match) {
-            // Student: Uncomment and fill out these two cases
+        switch (match)
+        {
             case COUNTRY_WITH_NAME:
                 return CountryContract.CountryEntry.CONTENT_ITEM_TYPE;
             case COUNTRY:
@@ -105,11 +87,14 @@ public class CountryContentProvider extends ContentProvider{
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder) {
-        // Here's the switch statement that, given a URI, will determine what kind of request it is,
+                        String sortOrder)
+    {
+        // Switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
-        switch (sUriMatcher.match(uri)) {
+        switch (sUriMatcher.match(uri))
+        {
+            //Selected country
             // "country/*/*"
             case COUNTRY_WITH_NAME:
             {
@@ -118,7 +103,8 @@ public class CountryContentProvider extends ContentProvider{
             }
 
             // "country"
-            case COUNTRY: {
+            case COUNTRY:
+            {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         CountryContract.CountryEntry.TABLE_NAME,
                         projection,
@@ -139,17 +125,18 @@ public class CountryContentProvider extends ContentProvider{
         return retCursor;
     }
 
-    /*
-        Student: Add the ability to insert Locations to the implementation of this function.
-     */
+
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(Uri uri, ContentValues values)
+    {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
 
-        switch (match) {
-            case COUNTRY: {
+        switch (match)
+        {
+            case COUNTRY:
+            {
                 long _id = db.insert(CountryContract.CountryEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = CountryContract.CountryEntry.buildCountryUri(_id);
@@ -166,13 +153,15 @@ public class CountryContentProvider extends ContentProvider{
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(Uri uri, String selection, String[] selectionArgs)
+    {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
         // this makes delete all rows return the number of rows deleted
         if ( null == selection ) selection = "1";
-        switch (match) {
+        switch (match)
+        {
             case COUNTRY:
                 rowsDeleted = db.delete(
                         CountryContract.CountryEntry.TABLE_NAME, selection, selectionArgs);
@@ -181,7 +170,8 @@ public class CountryContentProvider extends ContentProvider{
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         // Because a null deletes all rows
-        if (rowsDeleted != 0) {
+        if (rowsDeleted != 0)
+        {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
@@ -190,13 +180,14 @@ public class CountryContentProvider extends ContentProvider{
 
 
     @Override
-    public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
+    {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
-        switch (match) {
+        switch (match)
+        {
             case COUNTRY:
                 rowsUpdated = db.update(CountryContract.CountryEntry.TABLE_NAME, values, selection,
                         selectionArgs);
@@ -205,29 +196,37 @@ public class CountryContentProvider extends ContentProvider{
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if (rowsUpdated != 0) {
+        if (rowsUpdated != 0)
+        {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(Uri uri, ContentValues[] values)
+    {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        switch (match) {
+        switch (match)
+        {
             case COUNTRY:
                 db.beginTransaction();
                 int returnCount = 0;
-                try {
-                    for (ContentValues value : values) {
+                try
+                {
+                    for (ContentValues value : values)
+                    {
                         long _id = db.insert(CountryContract.CountryEntry.TABLE_NAME, null, value);
-                        if (_id != -1) {
+                        if (_id != -1)
+                        {
                             returnCount++;
                         }
                     }
                     db.setTransactionSuccessful();
-                } finally {
+                }
+                finally
+                {
                     db.endTransaction();
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
@@ -238,11 +237,11 @@ public class CountryContentProvider extends ContentProvider{
     }
 
     // You do not need to call this method. This is a method specifically to assist the testing
-    // framework in running smoothly. You can read more at:
-    // http://developer.android.com/reference/android/content/ContentProvider.html#shutdown()
+
     @Override
     @TargetApi(11)
-    public void shutdown() {
+    public void shutdown()
+    {
         mOpenHelper.close();
         super.shutdown();
     }
