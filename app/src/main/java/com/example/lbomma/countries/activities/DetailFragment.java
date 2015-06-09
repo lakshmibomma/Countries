@@ -88,9 +88,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                 String latitude = extras.getString("latitude");
                 String longitude = extras.getString("longitude");
-
-                String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude) + "?z=7";
-
+                String countryName = extras.getString("countryName");
+                
+                String uri;
+                if ( latitude == null || longitude == null)
+                {
+                    uri = String.format(Locale.ENGLISH, "geo:%s,%s?q=%s", latitude, longitude,countryName);
+                }
+                else
+                {
+                    uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude) + "?z=7";
+                }
                 Uri geoLocation = Uri.parse(uri).buildUpon()
                         .build();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -173,6 +181,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         {
             getActivity().getIntent().putExtra("latitude", data.getString(COL_COUNTRY_LATITUDE));
             getActivity().getIntent().putExtra("longitude", data.getString(COL_COUNTRY_LONGITUDE));
+            getActivity().getIntent().putExtra("countryName", data.getString(COL_COUNTRY_NAME));
+
 
             TextView countryTextView = (TextView) getView().findViewById(R.id.country_text);
             countryTextView.setText(data.getString(COL_COUNTRY_NAME));
